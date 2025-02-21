@@ -1,0 +1,15 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+ul {
+  list-style-type:  none;
+}
+li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+}
