@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div>
-    <h1>To-Do App</h1>
+    <h1 className='text-xl font-bold text-blue-500'>priority list</h1>
     <AddTaskForm />
     <TaskList />
   </div>
