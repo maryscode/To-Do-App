@@ -27,23 +27,6 @@ const tasksSlice = createSlice({
             if (task){
                 task.isCompleted = !task.isCompleted; // if task exists, mark completed task as not completed task
             }
-        },
-        setFilter: (state,action) => { // Filter: all to do, complete, incomplete
-            const allTasks = state.tasks;
-            const completedTasks = state.tasks.filter(task => task.isCompleted === true);
-            const icompleteTasks = state.tasks.filter(task => task.isCompleted === false);
-            if (action.payload === 'completed'){
-                console.log('completed!')
-                console.log("Current Tasks:", JSON.parse(JSON.stringify(state.tasks)));
-                state.tasks = allTasks;
-                state.tasks = completedTasks;
-            }
-            if (action.payload === 'incomplete'){
-                console.log('incomplete!')
-                console.log("Current Tasks:", JSON.parse(JSON.stringify(state.tasks)));
-                state.tasks = allTasks;
-                state.tasks = icompleteTasks;
-            }
         }
     }
 })

@@ -9,9 +9,20 @@ const TaskList = () => {
     const tasks = useSelector((state) => state.tasks.tasks);
     const dispatch = useDispatch(); // get Redux dispatch fn
 
+    const [filter, setFilter] = useState('');
+
+    // filtered Tasks is an array
+    const filteredTasks = tasks.filter(task => {
+        if (filter === 'completed') return task.isCompleted === true;
+        if (filter === 'incomplete') return task.isCompleted === false;
+        return true;
+    })
     
-    const handleCheck = (e) => {
-        dispatch(toggleTask(e)); // toggle complete❌
+
+
+    
+    const handleCheck = (taskID) => {
+        dispatch(toggleTask(taskID)); // toggle complete❌
     }
 
     return (
@@ -20,7 +31,7 @@ const TaskList = () => {
             <button 
                 onClick={(e) => {
                     e.stopPropagation();
-                    dispatch(setFilter('completed')); 
+                    setFilter('completed'); 
                 }} 
                 className=""
             >
@@ -29,19 +40,27 @@ const TaskList = () => {
             <button 
                 onClick={(e) => {
                     e.stopPropagation();
-                    dispatch(setFilter('incomplete')); 
+                    setFilter('incomplete'); 
+                }} 
+                className=""
+            >                
+                Show Incomplete
+            </button>
+            <button 
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setFilter('all'); 
                 }} 
                 className=""
             >
-                Show Incomplete
-            </button>            
-
+                ALL
+            </button>
             <h2>Task list</h2>
             <ul className="list-none">
                 {tasks.length === 0 ? (
                     <p>No tasks yet!</p>
                 ) : (
-                    tasks.map((task) => (
+                    filteredTasks.map((task) => (
                         <li 
                             key={task.id}
                             onClick={() => handleCheck(task.id)} // pass id directly
