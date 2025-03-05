@@ -1,90 +1,84 @@
+
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux"; // access Redux state
-import { toggleTask, removeTask, setFilter } from "../redux/tasksSlice";
-
-
+import { toggleTask, removeTask } from "../redux/tasksSlice";
+import { DndContext, closestCenter, DragOverlay} from "@dnd-kit/core";
+import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import SortableTask from "./SortableTask";
+import { reorderTasks } from "../redux/tasksSlice";
 
 const TaskList = () => {
     // get tasks from redux state
     const tasks = useSelector((state) => state.tasks.tasks);
     const dispatch = useDispatch(); // get Redux dispatch fn
-
     const [filter, setFilter] = useState('');
+    const [activeTask, setActiveTask] = useState(null);
 
-    // filtered Tasks is an array
+    // Filter tasks
     const filteredTasks = tasks.filter(task => {
         if (filter === 'completed') return task.isCompleted === true;
         if (filter === 'incomplete') return task.isCompleted === false;
         return true;
     })
     
+    const handleDragStart = (event) => {
+        const draggedTask = tasks.find(task => task.id === event.active.id);
+        setActiveTask(draggedTask);
+    }
 
+    // Function to update Redux when tasks are reordered
+    const handleDragEnd = (event) => {
+        console.log("Drag Ended:", event);
+        setActiveTask(null); // clear dragged item
 
+        const { active, over } = event;
+        if (!over || active.id === over.id) return;
+
+        const oldIndex = tasks.findIndex(task => task.id === active.id);
+        const newIndex = tasks.findIndex(task => task.id === over.id)
+
+        const newTasks = arrayMove(tasks,oldIndex,newIndex);
+
+        dispatch(reorderTasks(newTasks));
+    };
     
     const handleCheck = (taskID) => {
         dispatch(toggleTask(taskID)); // toggle complete❌
-    }
+    };
 
-    return (
-        <div>
-            <h2>filter</h2>
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setFilter('completed'); 
-                }} 
-                className=""
-            >
-                Show Completed
-            </button>
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setFilter('incomplete'); 
-                }} 
-                className=""
-            >                
-                Show Incomplete
-            </button>
-            <button 
-                onClick={(e) => {
-                    e.stopPropagation();
-                    setFilter('all'); 
-                }} 
-                className=""
-            >
-                ALL
-            </button>
+    return ( 
+        <DndContext 
+            collisionDetection={closestCenter} 
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd} // 
+        >
+            <h2>Filter</h2>
+            <button onClick={(e) => setFilter('all')} >Show All</button>
+            <button onClick={(e) => setFilter('completed')} >Show Completed</button>
+            <button onClick={(e) => setFilter('incomplete')} >Show Incomplete</button>
+
             <h2>Task list</h2>
-            <ul className="list-none">
-                {tasks.length === 0 ? (
-                    <p>No tasks yet!</p>
-                ) : (
-                    filteredTasks.map((task) => (
-                        <li 
-                            key={task.id}
-                            onClick={() => handleCheck(task.id)} // pass id directly
-                            className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer 
-                                ${task.isCompleted ? "bg-green-100 line-through" : "bg-white"}
-                            `}
-                        >
-                            {task.isCompleted ? "✅" : "⬜"} 
-                            <span>{task.text}</span>
-                            <button 
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    //removeTask(task.id); // if using props
-                                    dispatch(removeTask(task.id)); // redux way, add dispatch
-                                }} 
-                                className="text-red-500 hover:text-red-700"
-                            >
-                                ❌
-                            </button>
-                        </li>
-                    ))   
-                )}
-            </ul>
-        </div>
+            <SortableContext 
+                items={tasks.map(task => task.id)} 
+                strategy={verticalListSortingStrategy}>
+                <ul className="list-none">
+                    {tasks.length === 0 ? (
+                        <p>No tasks yet!</p>
+                    ) : (
+                        filteredTasks.map((task) => (
+                            <SortableTask key={task.id} task={task} dispatch={dispatch} />
+                        ))   
+                    )}
+                </ul>
+            </SortableContext>
+            <DragOverlay>
+                {activeTask ? (
+                    <div className="p-3 border rounded-lg bg-gray-200 opacity-90">
+                        {activeTask.text}
+                    </div>
+                ): null }
+            </DragOverlay>
+        </DndContext>
     )
 }
 export default TaskList;

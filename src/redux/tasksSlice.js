@@ -27,9 +27,18 @@ const tasksSlice = createSlice({
             if (task){
                 task.isCompleted = !task.isCompleted; // if task exists, mark completed task as not completed task
             }
+        },
+        reorderTasks: (state,action) => {
+            //resave new task order
+            const newOrder = action.payload.map((taskID) => 
+                state.tasks.find(task => task.id === taskID) // action.payload = array of taskIDs. Map through and save an array of tasks objects based on task ID
+            );
+            console.log('reorderTasks: ' + action.payload);
+            // Ensure not adding "undefined"
+            state.tasks = action.payload; // update tasks order;
         }
     }
 })
 
-export const { addTask, removeTask, toggleTask, setFilter } = tasksSlice.actions; // export actions
+export const { addTask, removeTask, toggleTask, reorderTasks } = tasksSlice.actions; // export actions
 export default tasksSlice.reducer; // export reducer

@@ -8,6 +8,14 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 
+** Drag and Drop
+This project uses dnd-kit for drag-and-drop task reordering. This allows users to rearrange tasks intuitively while maintaining smooth performance and accessibility.
+
+How It Works
+Draggable tasks: Each task can be dragged and repositioned.
+Droppable list: The task list is reorderable using dnd-kit/sortable.
+Redux integration: The task order updates in Redux when dragging ends.
+
 ** Functionality
 * Add tasks
 * Toggle complete tasks
