@@ -22,7 +22,13 @@ const tasksSlice = createSlice({
                 task => task.id !== action.payload
             )
         },
-        toggleTask: (state,action) => { // mark complete/incomplete
+        editTask: (state,action) => { // editTask Text
+            console.log('edit task ID: ' + action.payload.id)
+            console.log('edit task text: ' + action.payload.text)
+            const task = state.tasks.find(task => task.id === action.payload.id);
+            task.text = action.payload.text;
+        },     
+        toggleTask: (state,action,) => { // mark complete/incomplete
             const task = state.tasks.find(task => task.id === action.payload);
             if (task){
                 task.isCompleted = !task.isCompleted; // if task exists, mark completed task as not completed task
@@ -40,5 +46,5 @@ const tasksSlice = createSlice({
     }
 })
 
-export const { addTask, removeTask, toggleTask, reorderTasks } = tasksSlice.actions; // export actions
+export const { addTask, removeTask, toggleTask, reorderTasks, editTask } = tasksSlice.actions; // export actions
 export default tasksSlice.reducer; // export reducer

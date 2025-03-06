@@ -18,6 +18,7 @@ const AddTaskForm = () => {
     return (
         <form onSubmit={handleSubmit}>
             <input
+                className="bg-violet-50 p-2 rounded-md"
                 type="text"
                 placeholder="Enter a task"
                 value={taskText}

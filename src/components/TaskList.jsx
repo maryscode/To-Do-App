@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux"; // access Redux state
 import { toggleTask, removeTask } from "../redux/tasksSlice";
 import { DndContext, closestCenter, DragOverlay} from "@dnd-kit/core";
 import { arrayMove, SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import SortableTask from "./SortableTask";
+import SortableTask from "./SortableTask"; // default
 import { reorderTasks } from "../redux/tasksSlice";
 
 const TaskList = () => {
@@ -58,6 +58,9 @@ const TaskList = () => {
             <button onClick={(e) => setFilter('incomplete')} >Show Incomplete</button>
 
             <h2>Task list</h2>
+
+
+
             <SortableContext 
                 items={tasks.map(task => task.id)} 
                 strategy={verticalListSortingStrategy}>
@@ -71,13 +74,20 @@ const TaskList = () => {
                     )}
                 </ul>
             </SortableContext>
+
             <DragOverlay>
                 {activeTask ? (
                     <div className="p-3 border rounded-lg bg-gray-200 opacity-90">
-                        {activeTask.text}
+                        DRAGGED: {activeTask.text}
                     </div>
                 ): null }
             </DragOverlay>
+
+            <div className="flex mt-10">
+                <span className="flex-1 bg-blue-200">To Do</span>
+                <span className="flex-1 bg-green-200">Doing</span>
+                <span className="flex-1 bg-red-200">Completed</span>
+            </div>
         </DndContext>
     )
 }
