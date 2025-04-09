@@ -6,7 +6,7 @@ import { toggleTask, removeTask, editTask } from "../redux/tasksSlice";
 
 const SortableTask = ({ task, dispatch }) => {
     const [editText, setEditText] = useState(false);
-    const [taskText, setTaskText] = useState(task.text);
+    const [taskText, setTaskText] = useState(task.title);
 
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
 

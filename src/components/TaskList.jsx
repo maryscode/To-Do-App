@@ -8,8 +8,10 @@ import SortableTask from "./SortableTask"; // default
 import { reorderTasks } from "../redux/tasksSlice";
 
 const TaskList = () => {
+
     // get tasks from redux state
-    const tasks = useSelector((state) => state.tasks.tasks);
+    const {tasks, status, error} = useSelector((state) => state.tasks);
+
     const dispatch = useDispatch(); // get Redux dispatch fn
     const [filter, setFilter] = useState('');
     const [activeTask, setActiveTask] = useState(null);
@@ -46,6 +48,11 @@ const TaskList = () => {
         dispatch(toggleTask(taskID)); // toggle complete❌
     };
 
+
+    // Stop render and return early if loading status is: 
+    if (status === 'loading') return <p>Loading tasks...</p>;
+    if (status === 'failed') return <p>Error: {error}</p>;
+
     return ( 
         <DndContext 
             collisionDetection={closestCenter} 
@@ -58,8 +65,6 @@ const TaskList = () => {
             <button onClick={(e) => setFilter('incomplete')} >Show Incomplete</button>
 
             <h2>Task list</h2>
-
-
 
             <SortableContext 
                 items={tasks.map(task => task.id)} 

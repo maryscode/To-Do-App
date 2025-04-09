@@ -1,11 +1,17 @@
-import { useState } from 'react'
-import TaskList from './components/TaskList'
-import AddTaskForm from './components/AddTaskForm'
+import { useState, useEffect } from 'react';
+import TaskList from './components/TaskList';
+import AddTaskForm from './components/AddTaskForm';
+import { useDispatch } from 'react-redux';
+import { fetchTasks } from './redux/tasksSlice';
 
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, [dispatch]);  
 
   return (
     <div>

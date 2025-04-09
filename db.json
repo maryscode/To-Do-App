@@ -1,0 +1,25 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Create UI wireframes",
+      "priority": "high",
+      "status": "todo",
+      "isCompleted": false
+    },
+    {
+      "id": 2,
+      "title": "Write tests",
+      "priority": "medium",
+      "status": "in-progress",
+      "isCompleted": false
+    },
+    {
+      "id": 3,
+      "title": "Refactor components",
+      "priority": "low",
+      "status": "done",
+      "isCompleted": true
+    }
+  ]
+}
