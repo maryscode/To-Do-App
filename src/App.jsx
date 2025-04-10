@@ -11,7 +11,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchTasks());
-  }, [dispatch]);  
+  }, [dispatch]); // include dispatch to satisfy React hook rules 
 
   return (
     <div>

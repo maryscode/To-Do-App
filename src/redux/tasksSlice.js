@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Get Tasks
 export const fetchTasks = () => async(dispatch) => {
     dispatch(tasksLoading());
+    console.log("📡 fetchTasks called");
 
     try {
         const response = await fetch(`http://localhost:4000/tasks`);
@@ -14,6 +16,38 @@ export const fetchTasks = () => async(dispatch) => {
     } catch (error) {
         dispatch(tasksError(error.message))
         console.error("Error fetching data: ", error);
+    }
+}
+
+// Add tasks to db
+export const createTask = (title) => async(dispatch) => {
+    
+    try {
+        // try posting data
+        const response = await fetch(`http://localhost:4000/tasks`, {
+            method:  "POST",
+            headers: {"Content-type":"application/json"},
+            body: JSON.stringify({
+                id: Date.now(), // still local, until we POST
+                title: title, // << title variable is the only thing added manually
+                priority: "medium",       // default value for now
+                status: "todo",           // default column
+                isCompleted: false                
+            })
+        });
+        if (!response.ok) {
+            throw new Error('Failed to create task');
+        }
+        
+        const newTask = await response.json();
+        dispatch(taskCreated(newTask)); // only add new task
+
+
+       //dispatch(fetchTasks(data)); // gets ALL tasks
+
+    } catch (error) {
+        dispatch(tasksError(error.message))
+        console.error("Error adding data: ", error);
     }
 }
 
@@ -40,6 +74,10 @@ const tasksSlice = createSlice({
             state.status = 'error';
             state.error = action.payload;
         },
+        taskCreated: (state, action) => {
+            state.tasks.push(action.payload);
+            state.status = 'succeeded'; // Optional: reset loading state
+        },
         addTask: (state,action) => { // adds new tasks to the list
             state.tasks.push({
                 id: Date.now(), // still local, until we POST
@@ -47,10 +85,8 @@ const tasksSlice = createSlice({
                 priority: "medium",       // default value for now
                 status: "todo",           // default column
                 isCompleted: false
-            });
-
-                        
-        },
+            });           
+        },       
         removeTask: (state,action) => { // delete task
             state.tasks = state.tasks.filter(
                 task => task.id !== action.payload
@@ -88,7 +124,8 @@ export const {
     editTask,
     tasksLoading,
     tasksLoaded,
-    tasksError
+    tasksError,
+    taskCreated
 } = tasksSlice.actions; // export actions
 
 export default tasksSlice.reducer; // export reducer

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addTask } from "../redux/tasksSlice";
+// import { addTask } from "../redux/tasksSlice";
+import { createTask } from "../redux/tasksSlice";
 
 const AddTaskForm = () => {
     const [taskText, setTaskText] = useState('');
@@ -11,7 +12,7 @@ const AddTaskForm = () => {
 
         if(taskText.trim() === "") return;
 
-        dispatch(addTask(taskText)); /// add to state
+        dispatch(createTask(taskText)); /// add to state
         setTaskText(""); // reset input
     }
 

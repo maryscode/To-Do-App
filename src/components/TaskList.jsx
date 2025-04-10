@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux"; // access Redux state
 import { toggleTask, removeTask } from "../redux/tasksSlice";
 import { DndContext, closestCenter, DragOverlay} from "@dnd-kit/core";
@@ -13,6 +13,8 @@ const TaskList = () => {
     const {tasks, status, error} = useSelector((state) => state.tasks);
 
     const dispatch = useDispatch(); // get Redux dispatch fn
+
+
     const [filter, setFilter] = useState('');
     const [activeTask, setActiveTask] = useState(null);
 
@@ -50,8 +52,8 @@ const TaskList = () => {
 
 
     // Stop render and return early if loading status is: 
-    if (status === 'loading') return <p>Loading tasks...</p>;
-    if (status === 'failed') return <p>Error: {error}</p>;
+    if (status === 'loading' && tasks.length === 0) return <p>Loading tasks...</p>;
+    if (status === 'error') return <p>Error: {error}</p>;
 
     return ( 
         <DndContext 
